@@ -1,4 +1,5 @@
 package com.yihan.yuso;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,8 +9,13 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
+import com.yihan.yuso.model.entity.Picture;
 import com.yihan.yuso.model.entity.Post;
 import com.yihan.yuso.service.PostService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,5 +60,27 @@ public class CrawlerTest {
 
         boolean b = postService.saveBatch(postList);
         Assertions.assertTrue(b);
+    }
+
+    @Test
+    void testFetchPictures() throws IOException {
+        int current = 1;
+        String url = "https://www.bing.com/images/search?q=%e5%b0%8f%e9%bb%91%e5%ad%90&form=HDRSC3&first=" + current;
+        Document doc = Jsoup.connect(url).get();
+        Elements elements = doc.select(".iuscp.isv"); // 包络图片卡片的单元类
+        List<Picture> pictures = new ArrayList<>();
+        for (Element elem : elements) {
+            // 取图片地址
+            String m = elem.select(".iusc").get(0).attr("m");
+            String title = elem.select(".inflnk").get(0).attr("aria-label");
+            Map<String, String> map = JSONUtil.toBean(m, Map.class);
+            String murl = map.get("murl");
+//            System.out.println(murl);
+            Picture picture = new Picture();
+            picture.setTitle(title);
+            picture.setUrl(murl);
+            pictures.add(picture);
+        }
+        System.out.println(pictures);
     }
 }

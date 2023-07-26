@@ -6,10 +6,12 @@ import com.yihan.yuso.common.BaseResponse;
 import com.yihan.yuso.common.ErrorCode;
 import com.yihan.yuso.common.ResultUtils;
 import com.yihan.yuso.exception.BusinessException;
+import com.yihan.yuso.exception.ThrowUtils;
 import com.yihan.yuso.model.dto.post.PostQueryRequest;
 import com.yihan.yuso.model.dto.search.SearchRequest;
 import com.yihan.yuso.model.dto.user.UserQueryRequest;
 import com.yihan.yuso.model.entity.Picture;
+import com.yihan.yuso.model.enums.SearchTypeEnum;
 import com.yihan.yuso.model.vo.PostVO;
 import com.yihan.yuso.model.vo.SearchVO;
 import com.yihan.yuso.model.vo.UserVO;
@@ -17,6 +19,7 @@ import com.yihan.yuso.service.PictureService;
 import com.yihan.yuso.service.PostService;
 import com.yihan.yuso.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,48 +59,50 @@ public class SearchController {
      */
     @PostMapping("/all")
     public BaseResponse<SearchVO> doSearchAll(@RequestBody SearchRequest searchRequest, HttpServletRequest request) {
+        String searchType = searchRequest.getType();
+        SearchTypeEnum searchTypeEnum = SearchTypeEnum.getEnumByValue(searchType);
+        ThrowUtils.throwIf(StringUtils.isBlank(searchType), ErrorCode.PARAMS_ERROR);
 
         String searchText = searchRequest.getSearchText();
+        SearchVO searchVO = new SearchVO();
 
-
-        CompletableFuture<Page<UserVO>> userTask = CompletableFuture.supplyAsync( () -> {
+        if (searchTypeEnum == null) {
             UserQueryRequest userQueryRequest = new UserQueryRequest();
             userQueryRequest.setUserName(searchText);
             Page<UserVO> userVOPage = userService.listUserVOByPage(userQueryRequest);
-            return userVOPage;
-        });
 
-        CompletableFuture<Page<PostVO>>postTask = CompletableFuture.supplyAsync( () -> {
             PostQueryRequest postQueryRequest = new PostQueryRequest();
             postQueryRequest.setSearchText(searchText);
             Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
-            return postVOPage;
 
-        });
-
-        CompletableFuture<Page<Picture>> pictureTask = CompletableFuture.supplyAsync( () -> {
             Page<Picture> picturePage = pictureService.searchPicture(searchText, 1, 10);
-            return picturePage;
-        });
 
-        CompletableFuture.allOf(userTask, postTask, pictureTask).join();
-
-        try {
-            Page<UserVO> userVOPage = userTask.get();
-            Page<PostVO> postVOPage = postTask.get();
-            Page<Picture> picturePage = pictureTask.get();
-
-            SearchVO searchVO = new SearchVO();
             searchVO.setUserList(userVOPage.getRecords());
             searchVO.setPostList(postVOPage.getRecords());
             searchVO.setPictureList(picturePage.getRecords());
-
-            return ResultUtils.success(searchVO);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "搜索失败");
         }
-
-
-
+        else {
+            switch (searchTypeEnum) {
+                case POST:
+                    PostQueryRequest postQueryRequest = new PostQueryRequest();
+                    postQueryRequest.setSearchText(searchText);
+                    Page<PostVO> postVOPage = postService.listPostVOByPage(postQueryRequest, request);
+                    searchVO.setPostList(postVOPage.getRecords());
+                    break;
+                case USER:
+                    UserQueryRequest userQueryRequest = new UserQueryRequest();
+                    userQueryRequest.setUserName(searchText);
+                    Page<UserVO> userVOPage = userService.listUserVOByPage(userQueryRequest);
+                    searchVO.setUserList(userVOPage.getRecords());
+                    break;
+                case PICTURE:
+                    Page<Picture> picturePage = pictureService.searchPicture(searchText, 1, 10);
+                    searchVO.setPictureList(picturePage.getRecords());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return ResultUtils.success(searchVO)；
     }
 }

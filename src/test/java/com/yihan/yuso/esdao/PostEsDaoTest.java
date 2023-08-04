@@ -45,18 +45,20 @@ public class PostEsDaoTest {
         Page<PostEsDTO> PostPage = postEsDao.findAll(
                 PageRequest.of(0, 5, Sort.by("createTime")));
         List<PostEsDTO> postList = PostPage.getContent();
+        Optional<PostEsDTO> byId = postEsDao.findById(1L);
+        System.out.println(byId);
         System.out.println(postList);
     }
 
     @Test
     void testAdd() {
         PostEsDTO postEsDTO = new PostEsDTO();
-        postEsDTO.setId(1L);
-        postEsDTO.setTitle("test");
-        postEsDTO.setContent("test");
+        postEsDTO.setId(3L);
+        postEsDTO.setTitle("鱼皮是小黑子");
+        postEsDTO.setContent("鱼皮应该是一条大狗，他也可能是个小黑子");
         postEsDTO.setTags(Arrays.asList("java", "python"));
-        postEsDTO.setThumbNum(1);
-        postEsDTO.setFavourNum(1);
+//        postEsDTO.setThumbNum(1);
+//        postEsDTO.setFavourNum(1);
         postEsDTO.setUserId(1L);
         postEsDTO.setCreateTime(new Date());
         postEsDTO.setUpdateTime(new Date());
@@ -80,5 +82,11 @@ public class PostEsDaoTest {
     void testFindByCategory() {
         List<PostEsDTO> postEsDaoTestList = postEsDao.findByUserId(1L);
         System.out.println(postEsDaoTestList);
+    }
+
+    @Test
+    void testFindByTitle() {
+        List<PostEsDTO> yupi = postEsDao.findByTitle("鱼皮猫");
+        System.out.println(yupi);
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 public interface PostEsDao extends ElasticsearchRepository<PostEsDTO, Long> {
+    // ElasticsearchRepository 中已实现基本的CRUD
 
     List<PostEsDTO> findByUserId(Long userId);
+    List<PostEsDTO> findByTitle(String title);
 }

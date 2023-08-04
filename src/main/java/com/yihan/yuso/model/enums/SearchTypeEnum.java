@@ -16,7 +16,9 @@ public enum SearchTypeEnum {
 
     POST("post", "post"),
     USER("user", "user"),
-    PICTURE("picture", "picture");
+    PICTURE("picture", "picture"),
+
+    ALL("all", "all");
 
     private final String text;
 

@@ -3,6 +3,7 @@ package com.yihan.yuso.manager;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yihan.yuso.common.ErrorCode;
 import com.yihan.yuso.dataSource.*;
+import com.yihan.yuso.exception.BusinessException;
 import com.yihan.yuso.exception.ThrowUtils;
 import com.yihan.yuso.model.dto.search.SearchRequest;
 import com.yihan.yuso.model.entity.Picture;
@@ -14,9 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 
 @Slf4j
 @Component
@@ -42,11 +47,34 @@ public class SearchFacade {
         long pageSize = searchRequest.getPageSize();
         SearchVO searchVO = new SearchVO();
         if (searchTypeEnum == SearchTypeEnum.ALL) {
-            Page<PostVO> postVOPage;
-            Page<UserVO> userVOPage = userDataSource.doSearch(searchText, current, pageSize);
-            postVOPage = postDataSource.doSearch(searchText, current, pageSize);
-            Page<Picture> picturePage = pictureDataSource.doSearch(searchText, current, pageSize);
+            // 子线程中拿不到request，这里inheritable set true
+            RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(),true);
+            CompletableFuture<Page<PostVO>> postTask = CompletableFuture.supplyAsync(
+                    () -> postDataSource.doSearch(searchText, current, pageSize)
+            );
+            CompletableFuture<Page<Picture>> pictureTask = CompletableFuture.supplyAsync(
+                    () -> pictureDataSource.doSearch(searchText, current, pageSize)
+            );
+            CompletableFuture<Page<UserVO>> userTask = CompletableFuture.supplyAsync(
+                    () -> userDataSource.doSearch(searchText, current, pageSize)
+            );
 
+//            Page<PostVO> postVOPage;
+//            Page<UserVO> userVOPage = userDataSource.doSearch(searchText, current, pageSize);
+//            postVOPage = postDataSource.doSearch(searchText, current, pageSize);
+//            Page<Picture> picturePage = pictureDataSource.doSearch(searchText, current, pageSize);
+
+            CompletableFuture.allOf(userTask, postTask, pictureTask).join();
+            Page<UserVO> userVOPage;
+            Page<PostVO> postVOPage;
+            Page<Picture> picturePage;
+            try {
+                userVOPage = userTask.get();
+                postVOPage = postTask.get();
+                picturePage = pictureTask.get();
+            } catch (Exception e) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "CompletableFuture failed in search!");
+            }
             searchVO.setData(SearchTypeEnum.USER.getValue(), userVOPage.getRecords());
             searchVO.setData(SearchTypeEnum.POST.getValue(), postVOPage.getRecords());
             searchVO.setData(SearchTypeEnum.PICTURE.getValue(), picturePage.getRecords());

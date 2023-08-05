@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 // todo 取消注释开启任务
-@Component
+//@Component
 @Slf4j
 public class FetchInitPostList implements CommandLineRunner {
 
@@ -37,39 +37,42 @@ public class FetchInitPostList implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        String json = "{\"current\":1,\"pageSize\":8,\"sortField\":\"createTime\",\"sortOrder\":\"descend\",\"category\":\"文章\",\"reviewStatus\":1}";
-        String url = "https://www.code-nav.cn/api/post/search/page/vo";
-        String result = HttpRequest.post(url)
-                .body(json)
-                .execute()
-                .body();
+        for (int i = 1; i <100; i++) {
+            String json = String.format("{\"current\":%d,\"pageSize\":20,\"sortField\":\"createTime\",\"sortOrder\":\"descend\",\"category\":\"文章\",\"reviewStatus\":1}", i);
+            String url = "https://www.code-nav.cn/api/post/search/page/vo";
+            String result = HttpRequest.post(url)
+                    .body(json)
+                    .execute()
+                    .body();
 
-        Map<String, Object> map = JSONUtil.toBean(result, Map.class);
-        JSONObject data = (JSONObject) map.get("data");
-        JSONArray records = (JSONArray) data.get("records");
+            Map<String, Object> map = JSONUtil.toBean(result, Map.class);
+            JSONObject data = (JSONObject) map.get("data");
+            JSONArray records = (JSONArray) data.get("records");
 
-        List<Post> postList = new ArrayList<>();
-        for (Object record : records) {
-            JSONObject tmp = (JSONObject) record;
-            Post post = new Post();
-            post.setTitle(tmp.getStr("title"));
-            post.setContent(tmp.getStr("content"));
-            JSONArray tags = (JSONArray) tmp.get("tags");
-            List<String> tagList = tags.toList(String.class);
-            post.setTags(JSONUtil.toJsonStr(tagList));
-            post.setUserId(1L);
-            post.setCreateTime(new Date());
-            post.setUpdateTime(new Date());
-            postList.add(post);
-        }
+            List<Post> postList = new ArrayList<>();
+            for (Object record : records) {
+                JSONObject tmp = (JSONObject) record;
+                Post post = new Post();
+                post.setTitle(tmp.getStr("title"));
+                post.setContent(tmp.getStr("content"));
+                JSONArray tags = (JSONArray) tmp.get("tags");
+                List<String> tagList = tags.toList(String.class);
+                post.setTags(JSONUtil.toJsonStr(tagList));
+                post.setUserId((long) i % 3);
+                post.setCreateTime(new Date());
+                post.setUpdateTime(new Date());
+                postList.add(post);
+            }
 //        System.out.println(postList);
 
-        boolean b = postService.saveBatch(postList);
-        if (b) {
-            log.info("Fetched {} initial post list", postList.size());
+            boolean b = postService.saveBatch(postList);
+            if (b) {
+                log.info("Fetched {} initial post list", postList.size());
+            }
+            else {
+                log.error("Failed to fetch initial post list");
+            }
         }
-        else {
-            log.error("Failed to fetch initial post list");
-        }
+
     }
 }

@@ -1,8 +1,6 @@
 
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
-k
-;src/main/java/com/yihan/yuso/controller/WxMpController.java,a\8\a890e5decc69f9204a32b3db11ec12d9649ab3d3
 j
 :src/main/java/com/yihan/yuso/config/MyBatisPlusConfig.java,c\a\ca94fc1d292d3b2bb63997c658f481da9e43d86f
 c
@@ -29,8 +27,6 @@ m
 =src/main/java/com/yihan/yuso/exception/BusinessException.java,2\5\256dbadeeeb57f047b43031e1ccd8b34b5aa09d6
 o
 ?src/main/java/com/yihan/yuso/model/dto/user/UserAddRequest.java,4\d\4dc8e8c60099a4dac824972d9679d28ee0679262
-p
-@src/main/java/com/yihan/yuso/controller/PostThumbController.java,4\1\4181ff4fec71db12a33f393077735005ea6b072f
 r
 Bsrc/main/java/com/yihan/yuso/model/dto/user/UserUpdateRequest.java,7\5\75ba045cb49341c0afe478583d6a8b7e4b5c8392
 c
@@ -67,8 +63,6 @@ g
 7src/main/java/com/yihan/yuso/constant/UserConstant.java,3\2\320861199b223859eaf5e3ac37e26fd42a4c31b7
 g
 7src/main/java/com/yihan/yuso/constant/FileConstant.java,f\9\f94dd4e87cb2584d532d441b0e5064fb0d3eedaf
-k
-;src/main/java/com/yihan/yuso/controller/FileController.java,b\e\be15df42408e89d4e3444ae37db0965922286a20
 t
 Dsrc/main/java/com/yihan/yuso/model/dto/user/UserUpdateMyRequest.java,a\d\ad4a873723959213341df0cfb416f079f16c9365
 r
@@ -91,8 +85,6 @@ j
 :src/main/java/com/yihan/yuso/service/PostThumbService.java,5\b\5b131c8acfb7c313f9875d5e62e67a98dc28e75d
 r
 Bsrc/main/java/com/yihan/yuso/model/dto/file/UploadFileRequest.java,5\9\597851d21e370e89079cebff4a42e18b938173f6
-q
-Asrc/main/java/com/yihan/yuso/controller/PostFavourController.java,c\c\cced3094b9ff98706761e972c09d2760017bdcb0
 i
 9src/main/java/com/yihan/yuso/constant/CommonConstant.java,4\b\4bd6a2f1b50f0b6bcfcbdf215833a4d0defc7c16
 a
@@ -141,14 +133,10 @@ k
 ;src/main/java/com/yihan/yuso/service/PostFavourService.java,5\9\5994824797feecfb7fda278ff8fd5f5d5ab33876
 e
 5src/main/java/com/yihan/yuso/service/UserService.java,9\9\99739cb5a1f1e52bf57c946627393741ee6bdd9d
-n
->src/main/java/com/yihan/yuso/controller/PictureController.java,e\9\e99259590e45580e0aa533e219d3123b2e6d6646
 w
 Gsrc/main/java/com/yihan/yuso/model/dto/picture/PictureQeuryRequest.java,5\3\5366a392bcedb6ececdd21037d1b7f6c42bdcc23
 f
 6src/main/java/com/yihan/yuso/model/entity/Picture.java,e\0\e00b9ed508be16fac46851041b0319585790f8f9
-k
-;src/main/java/com/yihan/yuso/controller/UserController.java,4\4\444bfb974465e8cd87e37ecaa0f6767d608d47b5
 n
 >src/main/java/com/yihan/yuso/service/impl/UserServiceImpl.java,0\2\02865a989f731f72802c0a9769939704787090bb
 h
@@ -169,8 +157,6 @@ e
 5src/test/java/com/yihan/yuso/esdao/PostEsDaoTest.java,8\5\8562300d8e045af4ac68435a3350ee79af2675db
 a
 1src/main/java/com/yihan/yuso/esdao/PostEsDao.java,4\7\472c4e21a33cf7f631fe155f889e8250e5eacb2e
-m
-=src/main/java/com/yihan/yuso/controller/SearchController.java,2\d\2d96dda5cbf076a1cb290c6dab347b7de1c6a063
 ]
 -src/test/java/com/yihan/yuso/CrawlerTest.java,c\a\caecfac066a57c7e4128093768e10e71d99d74ee
 G
@@ -189,7 +175,5 @@ c
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 D
 sql/create_table.sql,5\1\510eee06ce2a2d91bf446511ffd106e2d2d7aa07
-k
-;src/main/java/com/yihan/yuso/controller/PostController.java,9\e\9eb7e75b83a0ce104cae9bae38a54f1e3770b66a
 j
 :src/main/java/com/yihan/yuso/model/dto/post/PostEsDTO.java,2\2\22ca62d3c074afb4b7c5532db3b40cd92e1191c8

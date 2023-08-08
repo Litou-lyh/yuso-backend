@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/picture")
+@CrossOrigin("http://111.231.22.221")
 @Slf4j
 public class PictureController {
 

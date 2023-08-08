@@ -187,10 +187,9 @@ c
 3src/main/java/com/yihan/yuso/model/vo/SearchVO.java,1\0\1021c67a42b00b89e167a17d1edf179377f8b588
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-:
-
-Dockerfile,6\6\6651ddff6eb82c840ced7c1dddee15c6e1913dd4
 D
 sql/create_table.sql,5\1\510eee06ce2a2d91bf446511ffd106e2d2d7aa07
 k
 ;src/main/java/com/yihan/yuso/controller/PostController.java,9\e\9eb7e75b83a0ce104cae9bae38a54f1e3770b66a
+j
+:src/main/java/com/yihan/yuso/model/dto/post/PostEsDTO.java,2\2\22ca62d3c074afb4b7c5532db3b40cd92e1191c8

@@ -5,6 +5,8 @@ FROM maven:3.8.1-jdk-8-slim as builder
 
 # Copy local code to the container image.
 WORKDIR /app
+RUN mkdir yuso-backend
+RUN cd yuso-backend
 COPY pom.xml .
 COPY src ./src
 
@@ -12,4 +14,4 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Run the web service on container startup.
-CMD ["java","-jar","/app/target/springboot-init-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+CMD ["java","-jar","/app/target/yuso-backend-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
